@@ -60,6 +60,7 @@ Are you sure this is the right directory (y/n)?
             print("Canceld")
 
     # 集計を始めます
+    max_depth = 0
     summary = OrderedDict()
     pattern = re.compile("^.*__(.*)__.*$")
 
@@ -74,6 +75,7 @@ Are you sure this is the right directory (y/n)?
             # for tag in tags:
             #     print(f"tag={tag}")
 
+            depth = 1
             while True:
                 if tag_section in summary:
                     # print(f"+=1")
@@ -86,16 +88,15 @@ Are you sure this is the right directory (y/n)?
                 if "_" in tag_section:
                     # print(f"before={tag_section}")
                     tag_section = tag_section.rsplit("_", 1)[0]
+                    depth += 1
                     # print(f"after={tag_section}")
 
                 else:
                     # print(f"break {tag_section}")
                     break
 
-        else:
-            pass
-
-        pass
+            if max_depth < depth:
+                max_depth = depth
 
     # 並び替え
     summary = OrderedDict(
@@ -111,12 +112,19 @@ Are you sure this is the right directory (y/n)?
 
     # CSVファイル出力
     with open('./summary.csv', 'w', encoding='utf-8', newline="") as f:
-        writer = csv.DictWriter(f, ['tag', 'count'], extrasaction='ignore')
+
+        header = ['tag']
+
+        for i in range(depth, max_depth+1):
+            header.append(f"count{i}")
+
+        writer = csv.DictWriter(f, header, extrasaction='ignore')
         writer.writeheader()
 
         rows = []
         for k, v in summary.items():
-            rows.append({'tag': k, 'count': v})
+            depth = k.count('_') + 1
+            rows.append({'tag': k, f'count{depth}': v})
 
         writer.writerows(rows)
 

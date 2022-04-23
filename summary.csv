@@ -1,8 +1,8 @@
-tag,count
-japan,3
-japan_tokyo,2
-japan_tokyo_yaesu,1
-osaka,1
-osaka_nipponbashi,1
-tokyo,1
-tokyo_akihabara,1
+tag,count1,count2,count3
+japan,3,,
+japan_tokyo,,2,
+japan_tokyo_yaesu,,,1
+osaka,1,,
+osaka_nipponbashi,,1,
+tokyo,1,,
+tokyo_akihabara,,1,
