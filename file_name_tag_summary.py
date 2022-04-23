@@ -1,6 +1,7 @@
 import os
 import glob
 import re
+from collections import OrderedDict
 
 
 def input_change_current_directory(prompt_message):
@@ -58,6 +59,7 @@ Are you sure this is the right directory (y/n)?
             print("Canceld")
 
     # 集計を始めます
+    summary = OrderedDict()
     pattern = re.compile("^.*__(.*)__.*$")
 
     for file in files:
@@ -71,10 +73,27 @@ Are you sure this is the right directory (y/n)?
             for tag in tags:
                 print(f"tag={tag}")
 
+            if tag_section in summary:
+                summary[tag_section] += 1
+            else:
+                summary[tag_section] = 1
+
         else:
             pass
 
         pass
+
+    # 並び替え
+    summary = OrderedDict(
+        sorted(summary.items(), key=lambda x: x[0])
+    )
+
+    # 集計表示
+    print("""
+Summary
+-------""")
+    for k, v in summary.items():
+        print(f"{k} = {v}")
 
 
 main()
