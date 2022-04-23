@@ -1,6 +1,7 @@
 import os
 import glob
 import re
+import csv
 from collections import OrderedDict
 
 
@@ -67,7 +68,7 @@ Are you sure this is the right directory (y/n)?
         if result:
             # Matched
             tag_section = result.group(1)
-            print(f"tag_section={tag_section}")
+            # print(f"tag_section={tag_section}")
 
             # tags = tag_section.split("_")
             # for tag in tags:
@@ -75,20 +76,20 @@ Are you sure this is the right directory (y/n)?
 
             while True:
                 if tag_section in summary:
-                    print(f"+=1")
+                    # print(f"+=1")
                     summary[tag_section] += 1
                 else:
-                    print(f"=1")
+                    # print(f"=1")
                     summary[tag_section] = 1
 
                 # _ が付いていれば、最後の１つを外したい
                 if "_" in tag_section:
-                    print(f"before={tag_section}")
+                    # print(f"before={tag_section}")
                     tag_section = tag_section.rsplit("_", 1)[0]
-                    print(f"after={tag_section}")
+                    # print(f"after={tag_section}")
 
                 else:
-                    print(f"break {tag_section}")
+                    # print(f"break {tag_section}")
                     break
 
         else:
@@ -102,11 +103,24 @@ Are you sure this is the right directory (y/n)?
     )
 
     # 集計表示
-    print("""
-Summary
--------""")
-    for k, v in summary.items():
-        print(f"{k} = {v}")
+#    print("""
+# Summary
+# -------""")
+#    for k, v in summary.items():
+#        print(f"{k} = {v}")
+
+    # CSVファイル出力
+    with open('./summary.csv', 'w', encoding='utf-8', newline="") as f:
+        writer = csv.DictWriter(f, ['tag', 'count'], extrasaction='ignore')
+        writer.writeheader()
+
+        rows = []
+        for k, v in summary.items():
+            rows.append({'tag': k, 'count': v})
+
+        writer.writerows(rows)
+
+    print("finished")
 
 
 main()
